@@ -153,8 +153,18 @@
     self.timer = nil;
 }
 
+- (NSString *)cleanZero:(NSString *)address {
+    NSArray<NSString *> *components = [address componentsSeparatedByString:@"."];
+    NSMutableString *cleanAddress = [NSMutableString new];
+    for (NSString* component in components) {
+        [cleanAddress appendString: [NSString stringWithFormat:@"%d.", [component intValue]]];
+    }
+    [cleanAddress deleteCharactersInRange:NSMakeRange([cleanAddress length]-1, 1)];
+    return  cleanAddress;
+}
+
 - (void)probeNetwork{
-    NSString *deviceIPAddress = [[[[NSString stringWithFormat:@"%@%ld", self.baseAddress, (long)self.currentHostAddress] stringByReplacingOccurrencesOfString:@".0" withString:@"."] stringByReplacingOccurrencesOfString:@".00" withString:@"."] stringByReplacingOccurrencesOfString:@".." withString:@".0."];
+    NSString *deviceIPAddress = [self cleanZero:[NSString stringWithFormat:@"%@%d", self.baseAddress, (int)self.currentHostAddress]];
     
     if(deviceIPAddress != nil) {
         //ping to check if device is active
