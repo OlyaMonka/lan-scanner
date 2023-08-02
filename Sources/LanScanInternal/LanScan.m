@@ -180,24 +180,6 @@
                 NSString *deviceMac = [self ip2mac: deviceIPAddress];
                 NSString *deviceBrand = [self.brandDictionary objectForKey: [self makeKeyFromMAC: deviceMac]];
                 
-                if([self isEmpty:deviceBrand]) {
-                    
-                    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"https://api.macvendors.com/%@", deviceMac]];
-                    NSData *data = [NSData dataWithContentsOfURL: url];
-                    if(![self isEmpty: data]) {
-                        deviceBrand = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                        if(![self isEmpty:deviceBrand]){
-                            
-                            NSMutableDictionary *vendors = [self downloadedVendorsDictionary];
-                            NSString *path = [self getDownloadedVendorsDictionaryPath];
-                            if(![self isEmpty: path]){
-                                vendors[[self makeKeyFromMAC:deviceMac]] = deviceBrand;
-                                [vendors writeToFile:path atomically:YES];
-                            }
-                        }
-                    }
-                }
-                
                 NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       deviceHostName != nil ? deviceHostName : @"", DEVICE_NAME,
                                       deviceIPAddress != nil ? deviceIPAddress : @"", DEVICE_IP_ADDRESS,
